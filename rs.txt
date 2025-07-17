@@ -1,0 +1,490 @@
+pub fn min_and_max(nb_1: i32, nb_2: i32, nb_3: i32) -> (i32, i32) {
+    let mut tmp_min = nb_1;
+    let mut tmp_max = nb_1;
+
+    if nb_2 < tmp_min {
+        tmp_min = nb_2;
+    }
+    if nb_2 > tmp_max {
+        tmp_max = nb_2;
+    }
+    if nb_3 < tmp_min {
+        tmp_min = nb_3;
+    }
+    if nb_3 > tmp_max {
+        tmp_max = nb_3;
+    }
+
+    (tmp_min, tmp_max)
+}
+
+
+
+pub fn count_factorial_steps(factorial: u64) -> u64 {
+    let mut step = 0;
+    let mut multiplier = 1;
+    let mut curr_val = factorial;
+
+    loop {
+        if curr_val < 2 {
+            return step;
+        } else if (curr_val % multiplier) > 0 {
+            return 0;
+        }
+        curr_val /= multiplier;
+        step += 1;
+        multiplier += 1;
+    }
+}
+
+
+#[derive(Debug, PartialEq, Eq)]
+pub struct Matrix(pub (i32, i32), pub (i32, i32));
+
+pub fn multiply(m: Matrix, val: i32) -> Matrix {
+    Matrix(
+        ((m.0).0 * val, (m.0).1 * val),
+        ((m.1).0 * val, (m.1).1 * val),
+    )
+}
+
+
+
+pub fn reverse_it(nbr: i32) -> String {
+    let s = &nbr.to_string();
+    let str_nbr = s.trim_start_matches('-');
+    let rev: Vec<char> = str_nbr.chars().rev().collect();
+    if nbr >= 0 {
+        return format!("{}{}", rev.into_iter().collect::<String>(), str_nbr);
+    }
+    return format!("-{}{}", rev.into_iter().collect::<String>(), str_nbr);
+}
+
+
+
+
+use std::collections::HashMap;
+pub fn counting_words(words: &str) -> HashMap<String, u32> {
+    words
+        .to_lowercase()
+        .split(|c: char| !c.is_alphanumeric() && c != '\'')
+        .map(|w| w.trim_matches('\''))
+        .filter(|w| !w.is_empty())
+        .fold(HashMap::new(), |mut map, w| {
+            *map.entry(String::from(w)).or_default() += 1;
+            map
+        })
+}
+
+
+
+use std::collections::HashMap;
+pub fn smallest(h: HashMap<&str, i32>) -> i32 {
+    let mut smallest_value = i32::MAX;
+
+    for (_, v) in h.iter() {
+        if *v < smallest_value {
+            smallest_value = *v;
+        }
+    }
+    return smallest_value;
+}
+
+
+
+pub fn remove_letter_sensitive(s: &str, letter: char) -> String {
+    s.replace(letter, "")
+}
+pub fn remove_letter_insensitive(s: &str, letter: char) -> String {
+    let lower_letter = letter.to_lowercase().to_string();
+    let upper_letter = letter.to_uppercase().to_string();
+    s.replace(&upper_letter, &lower_letter)
+        .replace(&lower_letter, "")
+}
+pub fn swap_letter_case(s: &str, letter: char) -> String {
+    s.split("")
+        .into_iter()
+        .map(|s| {
+            s.chars()
+                .filter_map(|c| {
+                    if c.to_string() == letter.to_lowercase().to_string() {
+                        c.to_uppercase().next()
+                    } else if c.to_string() == letter.to_uppercase().to_string() {
+                        c.to_lowercase().next()
+                    } else {
+                        Some(c)
+                    }
+                })
+                .collect()
+        })
+        .collect::<Vec<String>>()
+        .join("")
+}
+
+//partial_sums
+pub fn parts_sums(ls: &[u64]) -> Vec<u64> {
+    let mut res = vec![];
+    let mut sum: u64 = ls.iter().sum();
+    res.push(sum);
+    for nbr in ls.iter().rev() {
+        sum -= nbr;
+        res.push(sum);
+    }
+    res
+}
+
+
+pub fn inv_pyramid(st: String, max: usize) -> Vec<String> {
+    let mut vec = Vec::with_capacity(2 * max);
+    let mut create_line = |amount| vec.push(format!("{:>1$}", st.repeat(amount), 2 * amount));
+
+    for amount in 1..max + 1 {
+        create_line(amount)
+    }
+    for amount in (1..max).rev() {
+        create_line(amount)
+    }
+    return vec;
+}
+
+
+pub fn prev_prime(nbr: u64) -> u64 {
+    if nbr <= 2 {
+        return 0;
+    }
+
+    let mut min_number = 2;
+
+    for i in 2..nbr {
+        if is_prime(i) {
+            min_number = i;
+        }
+    }
+
+    min_number
+}
+fn is_prime(nbr: u64) -> bool {
+    if nbr > 0 {
+        if nbr <= 1 {
+            return false;
+        }
+        let mut d = 2;
+        while d * d <= nbr {
+            if nbr % d == 0 {
+                return false;
+            }
+            d += 1;
+        }
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+const WORD: &str = "stupid";
+pub fn check_ms(message: &str) -> Result<&str, &str> {
+    if message.is_empty() || message.contains(WORD) {
+        Err("ERROR: illegal")
+    } else {
+        Ok(message)
+    }
+}
+
+
+pub fn scytale_decoder(s: String, letters_per_turn: u32) -> Option<String> {
+    if s.is_empty() || letters_per_turn == 0 {
+        None
+    } else {
+        let mut decoded_s = "".to_string();
+        let mut start = 0;
+
+        while decoded_s.len() < s.len() {
+            decoded_s.push(s.chars().nth(start).unwrap());
+
+            let mut next = start + letters_per_turn as usize;
+            while next < s.len() {
+                decoded_s.push(s.chars().nth(next).unwrap());
+                next += letters_per_turn as usize;
+            }
+            start += 1;
+        }
+        Some(decoded_s)
+    }
+}
+
+
+
+
+fn main() {
+    let args: Vec<String> = std::env::args().collect();
+
+    rpn(&args[1]);
+}
+
+pub fn rpn(input: &str) {
+    let mut values: Vec<i64> = Vec::new();
+    let op = input.split_whitespace();
+    let mut err = true;
+
+    for v in op {
+        if let Ok(x) = v.parse() {
+            values.push(x);
+        } else {
+            if is_op(v) && values.len() < 2 {
+                err = false;
+                break;
+            }
+            let (y, x) = (values.pop().unwrap(), values.pop().unwrap());
+            match v {
+                "+" => values.push(x + y),
+                "-" => values.push(x - y),
+                "*" => values.push(x * y),
+                "/" => values.push(x / y),
+                "%" => values.push(x % y),
+                _ => {
+                    err = false;
+                    break;
+                }
+            }
+        }
+    }
+
+    if values.len() == 1 && err {
+        println!("{}", values[0]);
+    } else {
+        println!("Error");
+    }
+}
+
+fn is_op(s: &str) -> bool {
+    s == "+" || s == "-" || s == "*" || s == "/" || s == "%"
+}
+
+
+
+pub fn rot21(input: &str) -> String {
+    input
+        .chars()
+        .map(|character| match character {
+            'a'..='z' => {
+                ((((character as u8) - b'a') as i8 + 21).rem_euclid(26) as u8 + b'a') as char
+            }
+            'A'..='Z' => {
+                ((((character as u8) - b'A') as i8 + 21).rem_euclid(26) as u8 + b'A') as char
+            }
+            _ => character,
+        })
+        .collect::<String>()
+}
+
+
+
+pub mod library {
+    pub mod writers {
+        use super::books::*;
+        pub struct Writer {
+            pub first_name: String,
+            pub last_name: String,
+            pub books: Vec<Book>,
+        }
+    }
+    pub mod books {
+        pub struct Book {
+            pub title: String,
+            pub year: usize,
+        }
+    }
+}
+pub use library::writers::Writer;
+
+pub fn order_books(writer: &mut Writer) {
+    writer
+        .books
+        .sort_by(|a, b| a.title.to_lowercase().cmp(&b.title.to_lowercase()))
+}
+
+
+pub fn matrix_determinant(matrix: [[isize; 3]; 3]) -> isize {
+    matrix[0][0] * matrix[1][1] * matrix[2][2]
+        + matrix[0][1] * matrix[1][2] * matrix[2][0]
+        + matrix[0][2] * matrix[1][0] * matrix[2][1]
+        - matrix[0][0] * matrix[1][2] * matrix[2][1]
+        - matrix[0][1] * matrix[1][0] * matrix[2][2]
+        - matrix[0][2] * matrix[1][1] * matrix[2][0]
+}
+
+
+#[derive(Debug, PartialEq, Eq)]
+pub struct OfficeWorker {
+    pub name: String,
+    pub age: u32,
+    pub role: WorkerRole,
+}
+
+#[derive(Debug, PartialEq, Eq)]
+pub enum WorkerRole {
+    Admin,
+    User,
+    Guest,
+}
+
+impl From<&str> for OfficeWorker {
+    fn from(s: &str) -> Self {
+        let entries = s.split(',').collect::<Vec<&str>>();
+        OfficeWorker {
+            name: entries.get(0).unwrap().to_string(),
+            age: entries.get(1).unwrap().parse().unwrap(),
+            role: WorkerRole::from(*entries.get(2).unwrap()),
+        }
+    }
+}
+
+impl From<&str> for WorkerRole {
+    fn from(s: &str) -> Self {
+        match s {
+            "admin" => WorkerRole::Admin,
+            "user" => WorkerRole::User,
+            _ => WorkerRole::Guest,
+        }
+    }
+}
+
+
+
+#[derive(Debug, PartialEq, Eq, Clone, PartialOrd, Ord)]
+pub enum Antigen {
+    A,
+    AB,
+    B,
+    O,
+}
+
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone)]
+pub enum RhFactor {
+    Positive,
+    Negative,
+}
+
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone)]
+pub struct BloodType {
+    pub antigen: Antigen,
+    pub rh_factor: RhFactor,
+}
+
+impl BloodType {
+    pub fn can_receive_from(&self, other: &Self) -> bool {
+        // Positive can only receive from positive
+        // A can only give from A
+        // And B can only give to B
+        if self.rh_factor != other.rh_factor && self.rh_factor == RhFactor::Negative {
+            return false;
+        }
+
+        if other.antigen == Antigen::O {
+            return true;
+        }
+
+        // if self.rh_factor contains one of the antigens of other
+        // then it can receive from it
+        self.antigen == Antigen::AB || other.antigen == self.antigen
+    }
+
+    // who are the donors of self
+    pub fn donors(&self) -> Vec<Self> {
+        // all blood types A, B, AB, O
+        let mut blood_types = Vec::new();
+        let mut antigens = if self.antigen == Antigen::O {
+            vec![Antigen::O]
+        } else {
+            vec![Antigen::O, self.antigen.clone()]
+        };
+
+        let rh_factors = if self.rh_factor == RhFactor::Negative {
+            vec![RhFactor::Negative]
+        } else {
+            vec![RhFactor::Positive, RhFactor::Negative]
+        };
+
+        if self.antigen == Antigen::AB {
+            antigens.extend(vec![Antigen::A, Antigen::B]);
+        }
+
+        for factor in rh_factors.iter() {
+            for ant in antigens.iter() {
+                blood_types.push(BloodType {
+                    rh_factor: (*factor).clone(),
+                    antigen: (*ant).clone(),
+                })
+            }
+        }
+
+        blood_types
+    }
+
+    // who are the recipients of self
+    pub fn recipients(&self) -> Vec<BloodType> {
+        let mut blood_types = Vec::new();
+        let mut antigens = if self.antigen != Antigen::AB {
+            vec![Antigen::AB, self.antigen.clone()]
+        } else {
+            vec![Antigen::AB]
+        };
+
+        let rh_factors = if self.rh_factor == RhFactor::Negative {
+            vec![RhFactor::Positive, RhFactor::Negative]
+        } else {
+            vec![RhFactor::Positive]
+        };
+
+        if self.antigen == Antigen::O {
+            antigens.extend(vec![Antigen::A, Antigen::B]);
+        }
+
+        for factor in rh_factors.iter() {
+            for ant in antigens.iter() {
+                blood_types.push(BloodType {
+                    rh_factor: (*factor).clone(),
+                    antigen: (*ant).clone(),
+                })
+            }
+        }
+
+        blood_types
+    }
+}
+
+
+#[derive(Debug, Clone)]
+pub struct Matrix(pub Vec<Vec<i32>>);
+
+impl Matrix {
+    pub fn new(slice: &[&[i32]]) -> Self {
+        let mut inner = Vec::new();
+        for row in slice {
+            inner.push(row.to_vec());
+        }
+        Self(inner)
+    }
+}
+
+use std::fmt;
+
+impl fmt::Display for Matrix {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        for (i, row) in self.0.iter().enumerate() {
+            write!(f, "(")?;
+            for (j, el) in row.iter().enumerate() {
+                write!(f, "{}", el)?;
+                if j != row.len() - 1 {
+                    write!(f, " ")?;
+                }
+            }
+            write!(f, ")")?;
+            if i != self.0.len() - 1 {
+                write!(f, "\n")?;
+            }
+        }
+        Ok(())
+    }
+}
